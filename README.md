@@ -1,61 +1,45 @@
 # Location Intelligence Platform (India-Focused)
 
-Professional full-stack starter for an AI-enabled location intelligence product.
+Full-stack JavaScript starter with authentication, MongoDB, map intelligence, and AI advisory workflows.
 
-## Monorepo Structure
+## Projects
+- `backend/`: Node.js + Express + MongoDB + JWT auth
+- `frontend/`: React + Vite + Leaflet map UI
 
-- `frontend/` – React + Vite UI (modern glassmorphism dashboard)
-- `backend/` – Node.js + Express API with modular architecture and AI advisor endpoint
-- `.env.example` – Detailed in-house environment template covering AI, geospatial, mobility, analytics, and ops.
+## Key Features Implemented
+- User authentication: register, login, profile (`/api/auth/*`)
+- MongoDB integration with Mongoose user model
+- Map intelligence:
+  - geocode location search
+  - nearby place discovery by category (cafe, restaurant, hotel, theatre, gym)
+  - city-wide listing queries (e.g., all listed cafes in Delhi)
+- AI workflow:
+  - ask AI questions using map-derived place datasets
+  - examples: footfall strategy, nearby business mix opportunities
 
-## Tech Stack
-
-### Frontend
-- React 18 + Vite
-- React Router
-- Recharts for dashboard visualizations
-- Axios client
-- Lucide icons
-
-### Backend
-- Node.js + Express
-- Zod validation
-- OpenAI integration (optional with fallback)
-- Helmet, CORS, Morgan
+## API Endpoints
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+- `GET /api/map/geocode?query=Delhi`
+- `POST /api/map/nearby`
+- `POST /api/map/city`
+- `POST /api/intelligence/ask`
+- Existing location endpoints remain under `/api/location/*`
 
 ## Quick Start
-
 ```bash
-# install dependencies
 npm install --prefix backend
 npm install --prefix frontend
 
-# run backend
 npm run dev --prefix backend
-
-# run frontend
 npm run dev --prefix frontend
 ```
 
-## Core API Endpoints
-
-- `GET /health` – service health
-- `GET /api/location/dashboard` – KPI + hotspot dashboard payload
-- `POST /api/location/analyze` – location scoring + recommendations
-- `POST /api/location/advisor` – AI strategy response
-
-## Product Coverage in this Scaffold
-
-- Location analysis
-- Opportunity and growth scoring
-- AI business advisor workflow
-- Dashboard with hotspots and operational KPIs
-- Professional folder structure for scale-out modules (risk, migration, ads intelligence, reports)
-
-## Environment Setup
-
-1. Copy `.env.example` to `.env`
-2. Fill keys for providers you plan to use first (OpenAI + maps + data providers)
-3. Configure frontend `VITE_*` keys and backend runtime/security keys
-
-> This scaffold uses mock/synthetic data by default where no external keys are configured.
+## Example Flows
+1. Register/Login.
+2. Open **Map Intelligence** page.
+3. Search/pin location on map.
+4. Request nearby `cafe`/`gym`/`hotel` etc.
+5. Ask AI: "Give me footfall details and nearby opportunity insights."
+6. Query city lists: "All listed restaurants in Delhi" using city mode.

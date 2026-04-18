@@ -6,10 +6,10 @@ const client = env.openaiApiKey
   : null
 
 const platformContext = `You are an expert advisor for an India-focused location intelligence platform.
-You help with business expansion, outlet optimization, DOOH recommendations, and growth/risk analysis.
-Always give concise business-first recommendations with reasons and confidence level.`
+You help with expansion, outlet optimization, footfall estimation strategy, DOOH recommendations, and growth/risk analysis.
+Respond in concise bullets with practical action items and confidence notes.`
 
-export const generateAiAdvisory = async ({ question, locationProfile }) => {
+export const generateAiAdvisory = async ({ question, locationProfile, places = [] }) => {
   if (!client) {
     return {
       answer: 'AI key is not configured. Connect OPENAI_API_KEY to receive live AI recommendations.',
@@ -18,7 +18,13 @@ export const generateAiAdvisory = async ({ question, locationProfile }) => {
     }
   }
 
-  const userPrompt = `Question: ${question}\n\nLocation profile:\n${JSON.stringify(locationProfile, null, 2)}`
+  const userPrompt = `Question: ${question}
+
+Location profile:
+${JSON.stringify(locationProfile, null, 2)}
+
+Nearby/listed places dataset:
+${JSON.stringify(places.slice(0, 25), null, 2)}`
 
   const response = await client.responses.create({
     model: env.openaiModel,
@@ -28,10 +34,8 @@ export const generateAiAdvisory = async ({ question, locationProfile }) => {
     ]
   })
 
-  const answer = response.output_text || 'No response generated.'
-
   return {
-    answer,
+    answer: response.output_text || 'No response generated.',
     confidence: 'medium',
     source: 'openai'
   }

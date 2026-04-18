@@ -137,3 +137,31 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+.auth-wrap {
+  max-width: 520px;
+  margin: 4rem auto;
+  padding: 1.25rem;
+}
+
+.error-text {
+  color: #ff9ea8;
+}
+
+select {
+  border-radius: 10px;
+  border: 1px solid #30407a;
+  background: #0b1230;
+  color: #eaf0ff;
+  padding: 0.7rem;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.map-controls {
+  padding: 1rem;
+}
