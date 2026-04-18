@@ -4,7 +4,7 @@ Full-stack JavaScript starter with authentication, MongoDB, map intelligence, an
 
 ## Projects
 - `backend/`: Node.js + Express + MongoDB + JWT auth
-- `frontend/`: React + Vite + Leaflet map UI
+- `frontend/`: React + Vite + OpenStreetMap embed map UI
 
 ## Key Features Implemented
 - User authentication: register, login, profile (`/api/auth/*`)

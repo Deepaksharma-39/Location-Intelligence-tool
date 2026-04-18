@@ -1,15 +1,5 @@
-import { useState } from 'react'
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
+import { useMemo, useState } from 'react'
 import { askIntelligence, findCityPlaces, findNearbyPlaces, geocodeLocation } from '../services/api'
-
-function ClickPin ({ onPick }) {
-  useMapEvents({
-    click: (e) => {
-      onPick({ lat: e.latlng.lat, lng: e.latlng.lng })
-    }
-  })
-  return null
-}
 
 function MapIntelligencePage () {
   const [center, setCenter] = useState({ lat: 28.6139, lng: 77.209 })
@@ -20,10 +10,20 @@ function MapIntelligencePage () {
   const [places, setPlaces] = useState([])
   const [aiAnswer, setAiAnswer] = useState('')
 
+  const osmEmbedUrl = useMemo(() => {
+    const delta = 0.03
+    const left = center.lng - delta
+    const right = center.lng + delta
+    const top = center.lat + delta
+    const bottom = center.lat - delta
+    return `https://www.openstreetmap.org/export/embed.html?bbox=${left}%2C${bottom}%2C${right}%2C${top}&layer=mapnik&marker=${center.lat}%2C${center.lng}`
+  }, [center])
+
   const onSearch = async () => {
     const data = await geocodeLocation(query)
     if (data.length > 0) {
       setCenter({ lat: data[0].lat, lng: data[0].lng })
+      setCity(data[0].displayName.split(',')[0])
     }
   }
 
@@ -56,11 +56,20 @@ function MapIntelligencePage () {
     <section className="stack-lg">
       <header>
         <h2>Map + AI Intelligence</h2>
-        <p className="muted">Pin/search any location, list nearby businesses, and ask AI strategy questions.</p>
+        <p className="muted">Search a location, set coordinates, list nearby businesses, and ask AI strategy questions.</p>
       </header>
 
       <div className="glass-panel stack map-controls">
         <label>Search Location<input value={query} onChange={(e) => setQuery(e.target.value)} /></label>
+        <div className="grid two">
+          <label>Latitude
+            <input type="number" value={center.lat} onChange={(e) => setCenter({ ...center, lat: Number(e.target.value) })} />
+          </label>
+          <label>Longitude
+            <input type="number" value={center.lng} onChange={(e) => setCenter({ ...center, lng: Number(e.target.value) })} />
+          </label>
+        </div>
+
         <div className="grid two">
           <label>Category
             <select value={category} onChange={(e) => setCategory(e.target.value)}>
@@ -75,6 +84,7 @@ function MapIntelligencePage () {
             <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Delhi" />
           </label>
         </div>
+
         <label>Ask AI<input value={question} onChange={(e) => setQuestion(e.target.value)} /></label>
 
         <div className="btn-row">
@@ -86,21 +96,11 @@ function MapIntelligencePage () {
       </div>
 
       <article className="glass-panel" style={{ padding: '1rem' }}>
-        <MapContainer center={[center.lat, center.lng]} zoom={13} style={{ height: '420px', borderRadius: '14px' }}>
-          <TileLayer
-            attribution='&copy; OpenStreetMap contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <ClickPin onPick={setCenter} />
-          <Marker position={[center.lat, center.lng]}>
-            <Popup>Pinned location</Popup>
-          </Marker>
-          {places.slice(0, 25).map((place) => (
-            <Marker key={place.id} position={[place.lat, place.lng]}>
-              <Popup>{place.name}</Popup>
-            </Marker>
-          ))}
-        </MapContainer>
+        <iframe
+          title="OpenStreetMap"
+          src={osmEmbedUrl}
+          className="map-embed"
+        />
       </article>
 
       {aiAnswer && (
