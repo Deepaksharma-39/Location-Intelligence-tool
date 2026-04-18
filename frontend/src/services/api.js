@@ -57,3 +57,8 @@ export const askIntelligence = async (payload) => {
   const { data } = await apiClient.post('/intelligence/ask', payload)
   return data.data
 }
+
+export const askAdvisor = async (payload) => {
+  const { data } = await apiClient.post('/location/advisor', payload)
+  return data.data
+}
